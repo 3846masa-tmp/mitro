@@ -1,0 +1,34 @@
+mitro:
+  build: ./centos
+  volumes:
+    - "/data/mitro/build:/html/build"
+  links:
+    - postgres:db
+  environment:
+    DOMAIN: mitro.example.com
+    VIRTUAL_HOST: mitro.example.com
+    MITRO_PORT: 443
+    VIRTUAL_PORT: 8443
+    VIRTUAL_PROTO: https
+    JAVA_TOOL_OPTIONS: "-Dfile.encoding=UTF8"
+  expose:
+    - 8443
+  restart: always
+
+emailer:
+  build: ./emailer
+  links:
+    - postgres:db
+  environment:
+    DOMAIN: mitro.example.com
+    MAILGUN_API_KEY: MAILGUN_API_KEY
+    MAILGUN_DOMAIN: MAILGUN_DOMAIN
+  restart: always
+
+postgres:
+  image: postgres:9.2
+  volumes:
+    - "/data/mitro/db:/var/lib/postgresql/data"
+  environment:
+    POSTGRES_PASSWORD: SECRET_KEY
+  restart: always

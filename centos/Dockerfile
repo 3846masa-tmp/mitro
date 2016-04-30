@@ -31,12 +31,22 @@ RUN git clone https://github.com/mitro-co/mitro.git /srv/mitro
 # apply browser-ext patch and static files patch
 COPY ./lru_patch.diff /srv/mitro/
 COPY ./static_files.diff /srv/mitro/
+COPY ./install_html.diff /srv/mitro/
 RUN git apply lru_patch.diff
 RUN git apply static_files.diff
+RUN git apply install_html.diff
 
-# add static files
+RUN find /srv/mitro/ -type f -name *.mustache -print0 | \
+    xargs -0 sed -i -e \
+    's/https:\/\/www.mitro.co\/css\/site.css/\/css\/site.css/g'
+
+# build static file
 RUN mkdir /html
-COPY templates/verified.html /html/
+RUN cd /srv/mitro/ui && ./build.sh && \
+    cd /srv/mitro/ui/landing_page && \
+    npm i hogan.js@3.0.2 && \
+    mkdir mitro-web-alpha && make && \
+    cp /srv/mitro/ui/landing_page/build/* /html -r
 
 WORKDIR /srv/mitro/mitro-core
 

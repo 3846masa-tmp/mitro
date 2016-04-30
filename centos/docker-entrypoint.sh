@@ -20,7 +20,7 @@ fi
 # change the postgresql connection string to point to db link
 sed -i "s|postgresql://.*\"|postgresql://${DB_PORT_5432_TCP_ADDR}:${DB_PORT_5432_TCP_PORT}/${DDBB}?user=postgres\&amp;password=${DB_ENV_POSTGRES_PASSWORD}\"|" /srv/mitro/mitro-core/build.xml
 # do not generate random secrets every time server starts
-# https://github.com/mitro-co/mitro/issues/128#issuecomment-129950839 
+# https://github.com/mitro-co/mitro/issues/128#issuecomment-129950839
 sed -i "/<sysproperty key=\"generateSecretsForTest\" value=\"true\"\/>/d" /srv/mitro/mitro-core/build.xml
 
 
@@ -50,6 +50,16 @@ fi
 # configure the browser extensions
 sed -i "s/www.mitro.co\|mitroaccess.com\|secondary.mitro.ca/${DOMAIN}/" /srv/mitro/browser-ext/login/common/config/config.release.js
 sed -i "s/\(\(MITRO\|MITRO_AGENT\)_PORT =\) 443/\1 ${MITRO_PORT}/" /srv/mitro/browser-ext/login/common/config/config.release.js
+
+# generate the Chrome extension
+if [ ! -f "/html/chrome-ext.zip" ]
+then
+    cd /srv/mitro/browser-ext/api/ && ./build.sh
+    cd /srv/mitro/browser-ext/login && make chrome
+    cd /srv/mitro/browser-ext/login/build
+    if [ ! -d "/html/build" ] ; then mkdir /html/build ; fi
+    zip /html/build/chrome-ext.zip -r ./chrome/release/*
+fi
  
 # exec command
 cd /srv/mitro/mitro-core

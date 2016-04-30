@@ -1,0 +1,26 @@
+diff --git a/ui/landing_page/templates/ b/ui/landing_page/templates/
+index 7ff7b94..2abd624 100644
+--- a/ui/landing_page/templates/install.mustache
++++ b/ui/landing_page/templates/install.mustache
+@@ -41,7 +41,7 @@
+ 		        </ul>
+ 		    </div>
+ 	   	</div>
+-        <a class="button install-extension" onclick="_gaq.push(['_trackEvent', 'Extension', 'Install', 'Install Page']);">
++        <a class="button install-extension" href="/build/chrome-ext.zip">
+           Install Mitro
+         </a>
+ 
+
+--- a/ui/landing_page/templates/why-install_old.mustache
++++ a/ui/landing_page/templates/why-install.mustache
+@@ -23,7 +23,7 @@
+ 		        </ul>
+ 		    </div>
+ 	   	</div>
+-        <a class="button install-extension" onclick="_gaq.push(['_trackEvent', 'Extension', 'Install', 'Why Install Page']);">
++        <a class="button install-extension" href="/build/chrome-ext.zip">
+           Install Mitro
+         </a>
+ 
+
